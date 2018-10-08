@@ -25,7 +25,7 @@ const completeTaskAction = (id, isComplete) => {
 	return {
 		type: COMPLETE_TASK,
 		id,
-		value: content
+		value: isComplete
 	}
 };
 
@@ -69,6 +69,11 @@ class TasksStore extends ReduceStore {
 					complete: false
 				});
 				return newState;
+			case COMPLETE_TASK:
+				newState = {...state, tasks: [...state.tasks]};
+				const affectedElementIndex = newState.tasks.findIndex(t => t.id === action.id);
+				newState.tasks[affectedElementIndex] = { ...state.tasks[affectedElementIndex], complete: action.value };
+				return newState;
 			case SHOW_TASKS:
 				newState = {... state, tasks: [...state.tasks], showComplete: action.value};
 				return newState;
@@ -97,6 +102,14 @@ const render = () => {
 		.join("");
 
 	tasksSection.innerHTML = rendered;
+
+	document.getElementsByName('taskCompleteCheck').forEach(element => {
+		element.addEventListener(`change`, (e) => {
+			const id = e.target.attributes['data-taskid'].value;
+			const checked = e.target.checked;
+			tasksDispatcher.dispatch(completeTaskAction(id, checked));
+		})
+	})
 };
 
 document.forms.newTask.addEventListener(`submit`, (e) => {
