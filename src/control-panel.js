@@ -33,7 +33,7 @@ document.forms.fontSizeForm.fontSize.forEach(element=> {
 
 class UserPrefsStore extends Store {
   getInitialState() {
-    return {
+    return localStorage[`preferences`] ? JSON.parse(localStorage[`preferences`]) : {
       userName: "Jim",
       fontSize: "small",
     }
@@ -63,6 +63,7 @@ const userPrefsStore = new UserPrefsStore(controlPanelDispatcher);
 userPrefsStore.addListener((state)=> {
   console.info(`The current state is...`, state);
   render(state);
+  localStorage[`preferences`] = JSON.stringify(state);
 });
 
 const render = ({userName, fontSize}) => {
@@ -71,6 +72,4 @@ const render = ({userName, fontSize}) => {
   document.forms.fontSizeForm.fontSize.value = fontSize;
 };
 
-controlPanelDispatcher.register(action=>{
-  console.info("Received action...",action);
-});
+render(userPrefsStore.getUserPreferences());
