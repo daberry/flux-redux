@@ -14,7 +14,7 @@ export class ReduceStore extends Store {
 
 		if (newState !== this.__state) {
 			this.__state = newState;
-			this.emitChange();
+			this.__emitChange();
 		}
 	}
 }

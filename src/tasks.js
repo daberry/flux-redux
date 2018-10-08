@@ -58,6 +58,22 @@ class TasksStore extends ReduceStore {
 
 	reduce(state, action) {
 		console.log("Reducing...", state, action);
+		let newState;
+
+		switch (action.type) {
+			case CREATE_TASK:
+				newState = {...state, tasks: [...state.tasks]};
+				newState.tasks.push({
+					id: id(),
+					content: action.value,
+					complete: false
+				});
+				return newState;
+			case SHOW_TASKS:
+				newState = {... state, tasks: [...state.tasks], showComplete: action.value};
+				return newState;
+		}
+
 		return state;
 	}
 
@@ -100,5 +116,9 @@ document.getElementById(`showComplete`).addEventListener('change', ({target}) =>
 const tasksStore = new TasksStore(tasksDispatcher);
 
 tasksDispatcher.dispatch(`TEST_DISPATCH`);
+
+tasksStore.addListener(() => {
+	render();
+});
 
 render();
