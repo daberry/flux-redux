@@ -5,7 +5,7 @@ const tasksDispatcher = new Dispatcher();
 
 const CREATE_TASK = `CREATE_TASK`;
 const COMPLETE_TASK = `COMPLETE_TASK`;
-const SHOW_TASK = `SHOW_TASK`;
+const SHOW_TASKS = `SHOW_TASKS`;
 
 const createNewTaskAction = (content) => {
 	return {
@@ -17,7 +17,7 @@ const createNewTaskAction = (content) => {
 const showTasksAction = (show) => {
 	return {
 		type: SHOW_TASKS,
-		value: content
+		value: show
 	}
 };
 
@@ -82,6 +82,20 @@ const render = () => {
 
 	tasksSection.innerHTML = rendered;
 };
+
+document.forms.newTask.addEventListener(`submit`, (e) => {
+	e.preventDefault();
+	const name = e.target.newTaskName.value;
+	if (name) {
+		tasksDispatcher.dispatch(createNewTaskAction(name));
+		e.target.newTaskName.value = null;
+	}
+});
+
+document.getElementById(`showComplete`).addEventListener('change', ({target}) => {
+	const showComplete = target.checked;
+	tasksDispatcher.dispatch(showTasksAction(showComplete));
+});
 
 const tasksStore = new TasksStore(tasksDispatcher);
 
