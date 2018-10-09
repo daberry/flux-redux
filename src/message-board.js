@@ -1,5 +1,6 @@
 console.log(`Message board`);
 import { createStore, combineReducers } from 'redux'
+import { get } from './http';
 
 export const ONLINE = `ONLINE`;
 export const AWAY = `AWAY`;
@@ -100,3 +101,8 @@ document.forms.newMessage.addEventListener("submit",(e)=>{
 render();
 
 store.subscribe(render);
+
+console.log("Making request...");
+get(`http://pluralsight.com`, (id) => {
+	console.log("Received callback", id);
+});
